@@ -46,13 +46,15 @@ class Interface:
         """
 
         connector = boto3.session.Session()
-        arguments: dict = self.__get_arguments(connector=connector)
-
         s3_parameters: s3p.S3Parameters = src.s3.s3_parameters.S3Parameters(
             connector=connector).exc()
         service: sr.Service = src.functions.service.Service(
             connector=connector, region_name=s3_parameters.region_name).exc()
 
+        # Arguments
+        arguments: dict = self.__get_arguments(connector=connector)
+
+        # Set up
         setup = src.preface.setup.Setup().exc()
         if setup:
             return connector, s3_parameters, service, arguments
