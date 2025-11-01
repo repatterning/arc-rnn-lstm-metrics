@@ -6,8 +6,10 @@ import dask
 import config
 import src.elements.master as mr
 import src.elements.specification as sc
+import src.elements.structures as st
 import src.functions.directories
 import src.predictions.data
+import src.predictions.errors
 
 
 class Interface:
@@ -35,11 +37,13 @@ class Interface:
         """
 
         __get_data = dask.delayed(src.predictions.data.Data().exc)
+        __get_errors = dask.delayed(src.predictions.errors.Errors().exc)
 
         computations = []
         for specification in specifications:
             master: mr.Master = __get_data(specification=specification)
-            computations.append(master.e_training.shape[0])
+            structures: st.Structures = __get_errors(master=master)
+            computations.append(structures.training.shape[0])
 
         messages = dask.compute(computations, scheduler='threads')[0]
         logging.info(messages)
