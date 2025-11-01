@@ -2,7 +2,6 @@
 
 import pandas as pd
 
-import config
 import src.elements.master as mr
 import src.elements.specification as sc
 import src.elements.text_attributes as txa
@@ -23,7 +22,6 @@ class Data:
         Constructor
         """
 
-        self.__configurations = config.Config()
         self.__streams = src.functions.streams.Streams()
 
     def __get_data(self, uri: str) -> pd.DataFrame:
