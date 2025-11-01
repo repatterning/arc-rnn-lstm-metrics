@@ -24,8 +24,8 @@ class Errors:
         """
 
         frame = data.copy()[['measure', 'e_measure']]
-        frame = frame.assign(a_error=(frame['measure'] - frame['e_measure']).abs())
-        frame.loc[:, 'a_error_percentage'] = 100 * frame['a_error'].divide(frame['measure']).values
+        frame = frame.assign(ae=(frame['measure'] - frame['e_measure']).abs())
+        frame.loc[:, 'ape'] = 100 * frame['ae'].divide(frame['measure']).values
 
         logging.info(frame)
 
