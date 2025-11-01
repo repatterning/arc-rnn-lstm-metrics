@@ -1,15 +1,11 @@
 """Module metrics.py"""
-import json
-import os
 import typing
 
 import numpy as np
 import pandas as pd
 
-import config
-import src.elements.structures as st
 import src.elements.specification as sc
-import src.functions.objects
+import src.elements.structures as st
 
 
 class Metrics:
