@@ -10,11 +10,12 @@ class Master(typing.NamedTuple):
 
     Attributes<br>
     ----------<br>
-    estimates<br>
-    training<br>
-    testing<br>
+    e_training : pandas.DataFrame<br>
+        The training data, and the target estimates vis-à-vis a model
+
+    e_testing : pandas.DataFrame<br>
+        The testing data, and the target estimates vis-à-vis the model
     """
 
-    estimates: pd.DataFrame
-    training: pd.DataFrame
-    testing: pd.DataFrame
+    e_training: pd.DataFrame
+    e_testing: pd.DataFrame
