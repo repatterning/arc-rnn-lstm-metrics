@@ -3,7 +3,6 @@ import logging
 
 import dask
 
-import config
 import src.elements.master as mr
 import src.elements.specification as sc
 import src.elements.structures as st
@@ -18,16 +17,8 @@ class Interface:
     Interface
     """
 
-    def __init__(self, arguments: dict):
-        """
-
-        :param arguments:
-        """
-
-        self.__arguments = arguments
-
-        # Configurations
-        self.__configurations = config.Config()
+    def __init__(self):
+        pass
 
     @staticmethod
     def exc(specifications: list[sc.Specification]):
