@@ -2,6 +2,7 @@
 import logging
 
 import dask
+import pandas as pd
 
 import src.elements.master as mr
 import src.elements.specification as sc
@@ -39,8 +40,7 @@ class Interface:
             metrics = __get_metrics(structures=structures, specification=specification)
             computations.append(metrics)
 
-        estimates = dask.compute(computations, scheduler='threads')[0]
-        logging.info(estimates)
-
-        elements = sum(estimates, [])
-        logging.info(elements)
+        elements: list[list[dict]] = dask.compute(computations, scheduler='threads')[0]
+        __metrics: list[dict] = sum(elements, [])
+        aggregates = pd.DataFrame.from_records(data=__metrics)
+        logging.info(aggregates)
