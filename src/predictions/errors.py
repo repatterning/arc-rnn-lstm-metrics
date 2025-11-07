@@ -1,5 +1,4 @@
 """Module errors.py"""
-import logging
 
 import numpy as np
 import pandas as pd
@@ -33,14 +32,19 @@ class Errors:
         frame = frame.assign(ae=(frame['measure'] - frame['e_measure']).abs())
         frame.loc[:, 'ape'] = 100 * frame['ae'].divide(frame['measure']).values
 
-        logging.info(frame)
-
         return frame
 
-    def __get_quantiles(self, vector: np.ndarray):
+    def __get_quantiles(self, vector: np.ndarray) -> pd.DataFrame:
+        """
 
-        quantiles = np.quantile(a=vector, q=list(self.__q_points.keys()), method='inverted_cdf')
-        logging.info(quantiles)
+        :param vector:
+        :return:
+        """
+
+        quantiles = np.quantile(a=vector, q=list(self.__q_points.keys()), method='inverted_cdf').tolist()
+        frame = pd.DataFrame(data=np.array([quantiles]), columns=list(self.__q_points.values()))
+
+        return frame
 
     def exc(self, master: mr.Master) -> st.Structures:
         """
@@ -49,10 +53,14 @@ class Errors:
         :return:
         """
 
-        structures = st.Structures(
-            training=self.__get_errors(data=master.e_training),
-            testing=self.__get_errors(data=master.e_testing))
+        training = self.__get_errors(data=master.e_training)
+        testing = self.__get_errors(data=master.e_testing)
 
-        self.__get_quantiles(vector=structures.training['ape'].values)
+        structures = st.Structures(
+            training=training,
+            testing=testing,
+            q_training=self.__get_quantiles(vector=training['ape'].values),
+            q_testing=self.__get_quantiles(vector=testing['ape'].values)
+        )
 
         return structures
