@@ -12,9 +12,11 @@ class Structures(typing.NamedTuple):
     ----------<br>
     training<br>
     testing<br>
-    futures<br>
+    q_training<br>
+    q_testing<br>
     """
 
     training: pd.DataFrame
     testing: pd.DataFrame
-    futures: pd.DataFrame
+    q_training: pd.DataFrame
+    q_testing: pd.DataFrame

@@ -19,16 +19,6 @@ class Setup:
         self.__configurations = config.Config()
         self.__directories = src.functions.directories.Directories()
 
-    def __data(self) -> bool:
-        """
-
-        :return:
-        """
-
-        self.__directories.cleanup(path=self.__configurations.data_)
-
-        return self.__directories.create(path=self.__configurations.data_)
-
     def __local(self) -> bool:
         """
 
@@ -38,7 +28,7 @@ class Setup:
         self.__directories.cleanup(path=self.__configurations.warehouse)
 
         states = []
-        for path in [self.__configurations.points_, self.__configurations.menu_]:
+        for path in [self.__configurations.points_, self.__configurations.menu_, self.__configurations.aggregates_]:
             states.append(self.__directories.create(path=path))
 
         return all(states)
@@ -49,4 +39,4 @@ class Setup:
         :return:
         """
 
-        return self.__local() & self.__data()
+        return self.__local()

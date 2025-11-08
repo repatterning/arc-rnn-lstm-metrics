@@ -1,18 +1,31 @@
 """Module errors.py"""
+import logging
 
 import numpy as np
 import pandas as pd
 
+import src.elements.master as mr
+import src.elements.specification as sc
 import src.elements.structures as st
+import src.predictions.persist
 
 
 class Errors:
     """
-    Errors
+    Calculates error measures & metrics, vis-à-vis predictions, (a) per instance of a gauge's data
+    instances, and (b) across the instances of a gauge.
     """
 
     def __init__(self):
-        pass
+        """
+        Constructor
+        """
+
+        # Quantile points
+        self.__q_points = {0.10: 'l_whisker', 0.25: 'l_quartile', 0.50: 'median', 0.75: 'u_quartile', 0.90: 'u_whisker'}
+
+        # Instances
+        self.__persist = src.predictions.persist.Persist()
 
     @staticmethod
     def __get_errors(data: pd.DataFrame) -> pd.DataFrame:
@@ -22,26 +35,43 @@ class Errors:
         :return:
         """
 
-        # The error with respect to the median, for overarching error calculations
-        data.loc[:, 'error'] = data['median'] - data['observation']
+        frame = data.copy()[['timestamp', 'measure', 'e_measure']]
+        frame = frame.assign(ae=(frame['measure'] - frame['e_measure']).abs())
+        frame.loc[:, 'ape'] = 100 * frame['ae'].divide(frame['measure']).values
 
-        # Calculating error percentages
-        estimates = data[['median', 'lower_w', 'upper_w', 'lower_q', 'upper_q']].to_numpy()
-        raw = estimates - data['observation'].to_numpy()[:,None]
-        percentages = 100*np.true_divide(raw, data['observation'].to_numpy()[:,None])
-        data.loc[:, ['p_error', 'p_e_lower_w', 'p_e_upper_w', 'p_e_lower_q', 'p_e_upper_q']] = percentages
+        return frame
 
-        return data
-
-    def exc(self, structures: st.Structures):
+    def __get_quantiles(self, vector: np.ndarray) -> pd.DataFrame:
         """
 
-        :param structures: Refer to src/elements/structures.py
+        :param vector:
         :return:
         """
 
-        structures = structures._replace(
-            training=self.__get_errors(data=structures.training),
-            testing=self.__get_errors(data=structures.testing))
+        quantiles = np.quantile(a=vector, q=list(self.__q_points.keys()), method='inverted_cdf').tolist()
+        frame = pd.DataFrame(data=np.array([quantiles]), columns=list(self.__q_points.values()))
+
+        return frame
+
+    def exc(self, master: mr.Master, specification: sc.Specification) -> st.Structures:
+        """
+
+        :param master: Refer to src/elements/master.py
+        :param specification:
+        :return:
+        """
+
+        training = self.__get_errors(data=master.e_training)
+        testing = self.__get_errors(data=master.e_testing)
+
+        structures = st.Structures(
+            training=training,
+            testing=testing,
+            q_training=self.__get_quantiles(vector=training['ape'].values),
+            q_testing=self.__get_quantiles(vector=testing['ape'].values)
+        )
+
+        message = self.__persist.disaggregates(specification=specification, structures=structures)
+        logging.info(message)
 
         return structures

@@ -1,10 +1,8 @@
+
 <br>
 
 ## Environments
 
-* [Advanced GeoJSON Customization with on_each_feature](https://python-visualization.github.io/folium/dev/user_guide/geojson/geojson_advanced_on_each_feature.html)
-
-<br>
 
 ### Remote Development
 
@@ -16,7 +14,7 @@ For this Python project/template, the remote development environment requires
 An image is built via the command
 
 ```shell
-docker build . --file .devcontainer/Dockerfile -t spatial
+docker build . --file .devcontainer/Dockerfile -t points
 ```
 
 On success, the output of
@@ -31,17 +29,17 @@ should include
 
 | repository | tag    | image id | created  | size     |
 |:-----------|:-------|:---------|:---------|:---------|
-| spatial    | latest | $\ldots$ | $\ldots$ | $\ldots$ |
+| points     | latest | $\ldots$ | $\ldots$ | $\ldots$ |
 
 
 <br>
 
-Subsequently, run an instance of the image `spatial` via:
+Subsequently, run an instance of the image `points` via:
 
 
 ```shell
 docker run --rm -i -t -p 8050:8050 -w /app --mount
-    type=bind,src="$(pwd)",target=/app spatial
+    type=bind,src="$(pwd)",target=/app points
 ```
 
 or
@@ -49,13 +47,13 @@ or
 ```shell
 docker run --rm -i -t -p 8050:8050 -w /app --mount
     type=bind,src="$(pwd)",target=/app 
-      -v ~/.aws:/root/.aws spatial
+    -v ~/.aws:/root/.aws points
 ```
 
 <br>
 
 Herein, `-p 8050:8050` maps the host port `8050` to container port `8050`.  Note, the container's working environment,
-i.e., `-w`, must be inline with this project's top directory.  Additionally, visit the links for more about the flags/options $\rightarrow$
+i.e., `-w`, must be inline with this project's top directory.   Additionally, visit the links below for more about the flags/options $\rightarrow$
 
 * --rm: [automatically remove container](https://docs.docker.com/engine/reference/commandline/run/#:~:text=a%20container%20exits-,%2D%2Drm,-Automatically%20remove%20the)
 * -i: [interact](https://docs.docker.com/engine/reference/commandline/run/#:~:text=and%20reaps%20processes-,%2D%2Dinteractive,-%2C%20%2Di)
@@ -66,13 +64,13 @@ i.e., `-w`, must be inline with this project's top directory.  Additionally, vis
 
 <br>
 
-The part `-v ~/.aws:/root/.aws` ascertains Amazon Web Services interactions via containers. Get the name of a running instance of ``spatial`` via:
+The part `-v ~/.aws:/root/.aws` ascertains Amazon Web Services interactions via containers. Get the name of a running instance of ``points`` via:
 
 ```shell
 docker ps --all
 ```
 
-**Never deploy a root container**, study the production [Dockerfile](../Dockerfile); cf. remote [.devcontainer/Dockerfile](../.devcontainer/Dockerfile)
+Never deploy a root container, study the production [Dockerfile](../Dockerfile); cf. remote [.devcontainer/Dockerfile](../.devcontainer/Dockerfile)
 
 <br>
 
@@ -96,7 +94,9 @@ IDEA** set up involves connecting to a machine's Docker [daemon](https://www.jet
 
 ## Code Analysis
 
-The GitHub Actions script [main.yml](../.github/workflows/main.yml) conducts code analysis within a Cloud GitHub Workspace.  Depending on the script, code analysis may occur `on push` to any repository branch, or `on push` to a specific branch.  The sections herein outline remote code analysis.
+The GitHub Actions script [main.yml](../.github/workflows/main.yml) conducts code analysis within a Cloud GitHub Workspace.  Depending on the script, code analysis may occur `on push` to any repository branch, or `on push` to a specific branch.
+
+The sections herein outline remote code analysis.
 
 <br>
 
@@ -156,7 +156,6 @@ python -m flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 -
 ```
 
 inspects complexity.
-
 
 <br>
 <br>

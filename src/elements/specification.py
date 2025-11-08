@@ -1,9 +1,9 @@
-"""Module specifications.py"""
+"""Module specification.py"""
 import typing
 
-class Specifications(typing.NamedTuple):
+class Specification(typing.NamedTuple):
     """
-    The data type class ⇾ Specifications
+    The data type class ⇾ Specification
 
     Attributes
     ----------
@@ -21,3 +21,4 @@ class Specifications(typing.NamedTuple):
     latitude: float
     longitude: float
     river_name: str
+    uri: str

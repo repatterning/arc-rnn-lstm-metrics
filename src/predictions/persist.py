@@ -1,20 +1,18 @@
-"""Module boundaries.py"""
+"""Module persist.py"""
 import json
 import os
 
 import pandas as pd
 
 import config
-import src.elements.specifications as se
 import src.elements.structures as st
+import src.elements.specification as sc
 import src.functions.objects
 
 
 class Persist:
     """
-    <b>Notes</b><br>
-    ------<br>
-    This class calculates element errors.<br>
+    Persist
     """
 
     def __init__(self):
@@ -23,10 +21,9 @@ class Persist:
         """
 
         self.__configurations = config.Config()
-        self.__path = os.path.join(self.__configurations.points_, 'predictions')
 
+        # An instance for writing JSON objects
         self.__objects = src.functions.objects.Objects()
-
 
     @staticmethod
     def __get_node(blob: pd.DataFrame) -> dict:
@@ -40,29 +37,51 @@ class Persist:
 
         return json.loads(string)
 
-    def __persist(self, nodes: dict, name: str) -> str:
+    def __persist(self, nodes: dict, path: str) -> str:
         """
 
         :param nodes: Dictionary of data.
-        :param name: A name for the file.
+        :param path: ...
         :return:
         """
 
-        return self.__objects.write(
-            nodes=nodes, path=os.path.join(self.__path, f'{name}.json'))
+        return self.__objects.write(nodes=nodes, path=path)
 
-    def exc(self, structures: st.Structures, specifications: se.Specifications) -> str:
+    def disaggregates(self, specification: sc.Specification, structures: st.Structures) -> str:
         """
 
-        :param structures: Refer to src/elements/structures.py
-        :param specifications: Refer to src/elements/specifications.py
+        :param specification: <br>
+        :param structures: <br>
         :return:
         """
 
         nodes = {
-            'training': self.__get_node(structures.training.drop(columns='error')),
-            'testing': self.__get_node(structures.testing.drop(columns='error')),
-            'futures': self.__get_node(structures.futures.drop(columns='observation'))}
-        nodes.update(specifications._asdict())
+            'training': self.__get_node(structures.training),
+            'testing': self.__get_node(structures.testing),
+            'q_training': self.__get_node(structures.q_training),
+            'q_testing': self.__get_node(structures.q_testing)
+        }
+        nodes.update(specification._asdict())
+        nodes.pop('uri', None)
 
-        return self.__persist(nodes=nodes, name=str(specifications.ts_id))
+        path = os.path.join(self.__configurations.points_, f'{str(specification.ts_id)}.json')
+
+        return self.__persist(nodes=nodes, path=path)
+
+    def aggregates(self, frame: pd.DataFrame) -> str:
+        """
+
+        :param frame:
+        :return:
+        """
+
+        nodes = {}
+        for stage in ['training', 'testing']:
+            data: pd.DataFrame = frame.copy().loc[frame['stage'] == stage, :]
+            data.drop(columns='stage', inplace=True)
+            node = self.__get_node(blob=data)
+            nodes[stage] = node
+
+        path = os.path.join(self.__configurations.aggregates_, 'aggregates.json')
+
+        return self.__persist(nodes=nodes, path=path)

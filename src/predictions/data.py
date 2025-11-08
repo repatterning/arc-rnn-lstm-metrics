@@ -1,11 +1,9 @@
 """Module seasonal.py"""
-import os
 
 import pandas as pd
 
-import config
 import src.elements.master as mr
-import src.elements.specifications as se
+import src.elements.specification as sc
 import src.elements.text_attributes as txa
 import src.functions.objects
 import src.functions.streams
@@ -24,7 +22,6 @@ class Data:
         Constructor
         """
 
-        self.__configurations = config.Config()
         self.__streams = src.functions.streams.Streams()
 
     def __get_data(self, uri: str) -> pd.DataFrame:
@@ -38,18 +35,14 @@ class Data:
 
         return self.__streams.read(text=text)
 
-    def exc(self, specifications: se.Specifications) -> mr.Master:
+    def exc(self, specification: sc.Specification) -> mr.Master:
         """
 
-        :param specifications: Refer to src/elements/specifications.py
+        :param specification: Refer to src/elements/specification.py
         :return:
         """
 
-        # Reading-in
-        endpoint = os.path.join(self.__configurations.data_, str(specifications.catchment_id),
-                           str(specifications.ts_id))
-
         return mr.Master(
-            estimates=self.__get_data(uri=os.path.join(endpoint, 'estimates.csv')),
-            training=self.__get_data(uri=os.path.join(endpoint, 'training.csv')),
-            testing=self.__get_data(uri=os.path.join(endpoint, 'testing.csv')))
+            e_training=self.__get_data(uri=specification.uri + '/' + 'e_training.csv'),
+            e_testing=self.__get_data(uri=specification.uri + '/' + 'e_testing.csv')
+        )
