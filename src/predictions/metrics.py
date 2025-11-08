@@ -37,6 +37,9 @@ class Metrics:
                 'mean_ae': float(data['ae'].mean()),
                 'median_ae': float(data['ae'].median()),
                 'catchment_id': specification.catchment_id,
+                'catchment_name': specification.catchment_name,
+                'station_name': specification.station_name,
+                'river_name': specification.river_name,
                 'ts_id': specification.ts_id,
                 'stage': stage}
 
