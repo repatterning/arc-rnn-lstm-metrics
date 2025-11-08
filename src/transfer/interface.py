@@ -72,5 +72,5 @@ class Interface:
         # Transfer
         messages = src.s3.ingress.Ingress(
             service=self.__service, bucket_name=self.__s3_parameters.external).exc(
-            strings=strings, tagging='project=hydrography')
+            strings=strings, tagging=f'project={self.__configurations.project_tag}')
         logging.info(messages)
