@@ -67,7 +67,7 @@ class Persist:
 
         return self.__persist(nodes=nodes, path=path)
 
-    def aggregates(self, frame: pd.DataFrame):
+    def aggregates(self, frame: pd.DataFrame) -> str:
         """
 
         :param frame:
@@ -76,7 +76,6 @@ class Persist:
 
         nodes = {}
         for stage in ['training', 'testing']:
-
             data: pd.DataFrame = frame.copy().loc[frame['stage'] == stage, :]
             data.drop(columns='stage', inplace=True)
             node = self.__get_node(blob=data)
