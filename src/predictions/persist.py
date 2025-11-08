@@ -62,6 +62,7 @@ class Persist:
             'q_testing': self.__get_node(structures.q_testing)
         }
         nodes.update(specification._asdict())
+        nodes.pop('uri', None)
 
         path = os.path.join(self.__configurations.points_, f'{str(specification.ts_id)}.json')
 
