@@ -5,6 +5,8 @@ import pandas as pd
 
 import src.elements.master as mr
 import src.elements.structures as st
+import src.elements.specification as sc
+import src.predictions.persist
 
 
 class Errors:
@@ -20,6 +22,9 @@ class Errors:
 
         # Quantile points
         self.__q_points = {0.10: 'l_whisker', 0.25: 'l_quartile', 0.50: 'median', 0.75: 'u_quartile', 0.90: 'u_whisker'}
+
+        # Instances
+        self.__persist = src.predictions.persist.Persist()
 
     @staticmethod
     def __get_errors(data: pd.DataFrame) -> pd.DataFrame:
@@ -47,10 +52,11 @@ class Errors:
 
         return frame
 
-    def exc(self, master: mr.Master) -> st.Structures:
+    def exc(self, master: mr.Master, specification: sc.Specification) -> st.Structures:
         """
 
         :param master: Refer to src/elements/master.py
+        :param specification:
         :return:
         """
 
@@ -66,5 +72,7 @@ class Errors:
 
         logging.info(structures.testing)
         logging.info(structures.q_testing)
+
+        self.__persist.disaggregates(specification=specification, structures=structures)
 
         return structures
