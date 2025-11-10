@@ -5,9 +5,10 @@ import os
 import pandas as pd
 
 import config
-import src.elements.structures as st
 import src.elements.specification as sc
+import src.elements.structures as st
 import src.functions.objects
+import src.predictions.sections
 
 
 class Persist:
@@ -25,6 +26,16 @@ class Persist:
         # An instance for writing JSON objects
         self.__objects = src.functions.objects.Objects()
 
+    def __persist(self, nodes: dict, path: str) -> str:
+        """
+
+        :param nodes: Dictionary of data.
+        :param path: ...
+        :return:
+        """
+
+        return self.__objects.write(nodes=nodes, path=path)
+
     @staticmethod
     def __get_node(blob: pd.DataFrame) -> dict:
         """
@@ -36,16 +47,6 @@ class Persist:
         string: str = blob.to_json(orient='split')
 
         return json.loads(string)
-
-    def __persist(self, nodes: dict, path: str) -> str:
-        """
-
-        :param nodes: Dictionary of data.
-        :param path: ...
-        :return:
-        """
-
-        return self.__objects.write(nodes=nodes, path=path)
 
     def disaggregates(self, specification: sc.Specification, structures: st.Structures) -> str:
         """
@@ -79,9 +80,8 @@ class Persist:
         for stage in ['training', 'testing']:
             data: pd.DataFrame = frame.copy().loc[frame['stage'] == stage, :]
             data.drop(columns='stage', inplace=True)
-            node = self.__get_node(blob=data)
+            node = src.predictions.sections.Sections(frame=data.copy()).__call__()
             nodes[stage] = node
-
         path = os.path.join(self.__configurations.aggregates_, 'aggregates.json')
 
         return self.__persist(nodes=nodes, path=path)

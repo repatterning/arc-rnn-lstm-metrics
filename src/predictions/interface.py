@@ -44,7 +44,6 @@ class Interface:
         elements: list[list[dict]] = dask.compute(computations, scheduler='threads')[0]
         __metrics: list[dict] = sum(elements, [])
         aggregates = pd.DataFrame.from_records(data=__metrics)
-        logging.info(aggregates)
 
         message = src.predictions.persist.Persist().aggregates(frame=aggregates)
         logging.info(message)
