@@ -5,24 +5,31 @@ import pandas as pd
 
 
 class Sections:
+    """
+    This class creates catchment sections.
+    """
 
     def __init__(self, frame: pd.DataFrame):
         """
 
-        :param frame: Per instance, ...
+        :param frame: A frame of metrics per gauge.
         """
 
         self.__frame = frame
         self.__catchments = self.__get_catchments()
 
     def __get_catchments(self) -> dict:
+        """
+
+        :return:
+        """
 
         data = self.__frame[['catchment_id', 'catchment_name']].drop_duplicates()
         values = data.set_index(keys='catchment_id')
 
         return values.to_dict()['catchment_name']
 
-    def __get_disaggregate(self, catchment_id: int):
+    def __get_disaggregate(self, catchment_id: int) -> dict:
         """
 
         :param catchment_id: The identification doe of a catchment area.
