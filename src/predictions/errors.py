@@ -36,8 +36,8 @@ class Errors:
         """
 
         frame = data.copy()[['timestamp', 'measure', 'e_measure']]
-        frame = frame.assign(ae=(frame['measure'] - frame['e_measure']).abs())
-        frame.loc[:, 'ape'] = 100 * frame['ae'].divide(frame['measure']).values
+        frame = frame.assign(error=(frame['e_measure'] - frame['measure']))
+        frame.loc[:, 'p_error'] = 100 * frame['error'].divide(frame['measure']).values
 
         return frame
 
@@ -67,8 +67,8 @@ class Errors:
         structures = st.Structures(
             training=training,
             testing=testing,
-            q_training=self.__get_quantiles(vector=training['ape'].values),
-            q_testing=self.__get_quantiles(vector=testing['ape'].values)
+            q_training=self.__get_quantiles(vector=training['p_error'].values),
+            q_testing=self.__get_quantiles(vector=testing['p_error'].values)
         )
 
         message = self.__persist.disaggregates(specification=specification, structures=structures)
