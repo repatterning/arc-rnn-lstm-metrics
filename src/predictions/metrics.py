@@ -26,16 +26,16 @@ class Metrics:
         :return:
         """
 
-        _se: np.ndarray = np.power(data['ae'].to_numpy(), 2)
+        _se: np.ndarray = np.power(data['error'].to_numpy(), 2)
         _r_mean_se: float = np.sqrt(_se.mean())
         _r_median_se: float = np.sqrt(np.median(_se))
 
         return {'r_mean_se': float(_r_mean_se),
                 'r_median_se': float(_r_median_se),
-                'mean_ape': float(data['ape'].mean()),
-                'median_ape': float(data['ape'].median()),
-                'mean_ae': float(data['ae'].mean()),
-                'median_ae': float(data['ae'].median()),
+                'mean_pe': float(data['p_error'].mean()),
+                'median_pe': float(data['p_error'].median()),
+                'mean_e': float(data['error'].mean()),
+                'median_e': float(data['error'].median()),
                 'catchment_id': specification.catchment_id,
                 'catchment_name': specification.catchment_name,
                 'station_name': specification.station_name,
