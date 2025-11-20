@@ -6,7 +6,7 @@ import pandas as pd
 
 class Stages:
     """
-    This class creates catchment sections.
+    This class creates training, testing, etc., sections.
     """
 
     def __init__(self, excerpt: pd.DataFrame):

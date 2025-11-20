@@ -1,5 +1,4 @@
 """Module persist.py"""
-import logging
 import json
 import os
 
@@ -78,13 +77,14 @@ class Persist:
         :return:
         """
 
-        logging.info(frame)
-        logging.info(frame['catchment_id'].unique())
+        catchments = frame[['catchment_id', 'catchment_name']].drop_duplicates()
 
         nodes = {}
-        for catchment_id in frame['catchment_id'].unique():
+        for catchment_id, catchment_name in zip(catchments['catchment_id'].to_list(), catchments['catchment_name'].to_list()):
             excerpt: pd.DataFrame = frame.copy().loc[frame['catchment_id'] == catchment_id, :]
             node = src.predictions.stages.Stages(excerpt=excerpt).__call__()
+            node['catchment_id'] = catchment_id
+            node['catchment_name'] = catchment_name
             nodes[int(catchment_id)] = node
         path = os.path.join(self.__configurations.aggregates_, 'aggregates.json')
 
