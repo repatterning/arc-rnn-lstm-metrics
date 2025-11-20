@@ -36,7 +36,7 @@ class Errors:
         """
 
         frame = data.copy()[['timestamp', 'measure', 'e_measure']]
-        frame = frame.assign(error=(frame['e_measure'] - frame['measure']))
+        frame = frame.assign(error=frame['e_measure'] - frame['measure'])
         frame.loc[:, 'p_error'] = 100 * frame['error'].divide(frame['measure']).values
 
         return frame
