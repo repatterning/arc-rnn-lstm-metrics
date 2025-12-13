@@ -21,8 +21,8 @@ class Config:
         '''
         self.architecture = 'arc-rnn-lstm'
         self.s3_parameters_key = 's3_parameters.yaml'
-        self.argument_key = f'artefacts/architecture/{self.architecture}/arguments.json'
-        self.metadata_ = 'arc-rnn-lstm-metrics/external'
+        self.argument_key = f'architectures/{self.architecture}/arguments.json'
+        self.metadata_ = f'architectures/{self.architecture}/metrics/external'
 
 
         '''
@@ -47,10 +47,10 @@ class Config:
         '''
         Cloud Prefix: Destination
         '''
-        self.prefix = 'warehouse/arc-rnn-lstm-metrics'
+        self.prefix = 'warehouse-temporary/arc-rnn-lstm-metrics'
 
 
         '''
         Cloud Prefix: Source
         '''
-        self.origin_ = f'assets/{self.architecture}'
+        self.origin_ = f'assets-temporary/{self.architecture}'
