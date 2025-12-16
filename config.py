@@ -17,7 +17,7 @@ class Config:
 
         Over time, step-by-step, some of the items herein will be transferred to the overarching project's
         configurations zone/hub.
-        
+
         """
 
         '''
