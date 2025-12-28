@@ -37,7 +37,10 @@ class Interface:
 
         key_name = self.__configurations.argument_key
 
-        return src.s3.configurations.Configurations(connector=connector).objects(key_name=key_name)
+        arguments = src.s3.configurations.Configurations(connector=connector).objects(key_name=key_name)
+        arguments['prefix'] = arguments.get('metrics').get('inspect')
+
+        return arguments
 
     def exc(self) -> typing.Tuple[boto3.session.Session, s3p.S3Parameters, sr.Service, dict]:
         """

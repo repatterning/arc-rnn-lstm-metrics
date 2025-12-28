@@ -18,7 +18,7 @@ class Interface:
     Class Interface
     """
 
-    def __init__(self, connector: boto3.session.Session, service: sr.Service,  s3_parameters: s3p):
+    def __init__(self, connector: boto3.session.Session, service: sr.Service,  s3_parameters: s3p, arguments: dict):
         """
 
         :param connector:
@@ -27,15 +27,16 @@ class Interface:
         :param service: A suite of services for interacting with Amazon Web Services.<br>
         :param s3_parameters: The overarching S3 parameters settings of this
                               project, e.g., region code name, buckets, etc.<br>
+        :param arguments: A set of arguments vis-à-vis computation & storage objectives.
         """
 
         self.__service: sr.Service = service
         self.__s3_parameters: s3p.S3Parameters = s3_parameters
+        self.__arguments: dict = arguments
 
         # Instances
         self.__configurations = config.Config()
         self.__metadata = src.transfer.metadata.Metadata(connector=connector)
-        self.__dictionary = src.transfer.dictionary.Dictionary()
 
     def __get_metadata(self, frame: pd.DataFrame) -> pd.DataFrame:
         """
@@ -58,16 +59,16 @@ class Interface:
         """
 
         # The strings for transferring data to Amazon S3 (Simple Storage Service)
-        strings = self.__dictionary.exc(
+        strings = src.transfer.dictionary.Dictionary().exc(
             path=self.__configurations.pathway_, extension='*',
-            prefix=self.__configurations.prefix + '/')
+            prefix=self.__arguments.get('prefix').get('destination') + '/')
 
         strings = self.__get_metadata(frame=strings.copy())
         logging.info(strings)
 
         # Prepare the S3 (Simple Storage Service) section
         src.transfer.initial.Initial(
-            service=self.__service, s3_parameters=self.__s3_parameters).exc()
+            service=self.__service, s3_parameters=self.__s3_parameters, arguments=self.__arguments).exc()
 
         # Transfer
         messages = src.s3.ingress.Ingress(

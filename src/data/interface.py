@@ -17,15 +17,18 @@ class Interface:
     Interface
     """
 
-    def __init__(self, service: sr.Service, s3_parameters: s3p.S3Parameters):
+    def __init__(self, service: sr.Service, s3_parameters: s3p.S3Parameters, arguments: dict):
         """
 
+        :param service: A suite of services for interacting with Amazon Web Services.<br>
         :param s3_parameters: The overarching S3 (Simple Storage Service) parameters
-                              settings of this project, e.g., region code name, buckets, etc.
+                              settings of this project, e.g., region code name, buckets, etc.<br>
+        :param arguments: A set of arguments vis-à-vis computation & storage objectives.
         """
 
         self.__service: sr.Service = service
         self.__s3_parameters: s3p.S3Parameters = s3_parameters
+        self.__arguments: dict = arguments
 
         # Logging
         logging.basicConfig(level=logging.INFO,
@@ -39,7 +42,8 @@ class Interface:
         :return:
         """
 
-        cases = src.data.cases.Cases(service=self.__service, s3_parameters=self.__s3_parameters).exc()
+        cases = src.data.cases.Cases(
+            service=self.__service, s3_parameters=self.__s3_parameters, arguments=self.__arguments).exc()
 
         # Reference
         reference: pd.DataFrame = src.data.reference.Reference(
