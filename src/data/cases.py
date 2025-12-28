@@ -15,15 +15,17 @@ class Cases:
     Retrieves the catchment & time series codes of the gauges in focus.
     """
 
-    def __init__(self, service: sr.Service, s3_parameters: s3p.S3Parameters):
+    def __init__(self, service: sr.Service, s3_parameters: s3p.S3Parameters, arguments: dict):
         """
 
         :param service:
         :param s3_parameters:
+        :param arguments:
         """
 
         self.__service = service
         self.__s3_parameters = s3_parameters
+        self.__arguments = arguments
 
         # Configurations
         self.__configurations = config.Config()
@@ -62,7 +64,7 @@ class Cases:
         :return:
         """
 
-        paths = self.__pre.objects(prefix=self.__configurations.origin_, delimiter='/')
+        paths = self.__pre.objects(prefix=self.__arguments.get('prefix').get('source'), delimiter='/')
 
         computations = []
         for path in paths:
