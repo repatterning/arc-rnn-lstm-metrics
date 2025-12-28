@@ -46,15 +46,3 @@ class Config:
         self.points_ = os.path.join(self.pathway_, 'disaggregates', 'points')
         self.menu_ = os.path.join(self.pathway_, 'disaggregates', 'menu')
         self.aggregates_ = os.path.join(self.pathway_, 'aggregates')
-
-
-        '''
-        Cloud Prefix: Destination
-        '''
-        self.prefix = 'warehouse-t/arc-rnn-lstm-metrics'
-
-
-        '''
-        Cloud Prefix: Source
-        '''
-        self.origin_ = f'assets-t/{self.architecture}'
