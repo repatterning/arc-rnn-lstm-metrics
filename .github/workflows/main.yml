@@ -1,4 +1,4 @@
-name: 'Hydrography: Evaluating github.com/repatterning/arc-rnn-lstm'
+name: 'Hydrography: Error metrics ↠ github.com/repatterning/arc-rnn-lstm'
 
 on: [push]
 
@@ -66,6 +66,9 @@ jobs:
           printf "\n src/transfer "
           flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/transfer
           
+          printf "\n src/main.py "
+          flake8 --count --select=E9,F63,F7,F82 --show-source --statistics src/main.py
+          
           
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
           printf "\n\n"
@@ -91,6 +94,9 @@ jobs:
           
           printf "\n src/transfer "
           flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/transfer
+          
+          printf "\n src/main.py "
+          flake8 --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics src/main.py
 
 
       - name: Lint with pylint
@@ -119,6 +125,9 @@ jobs:
           
           printf "\n Package src/transfer"
           pylint --rcfile .pylintrc src/transfer
+          
+          printf "\n Package src/main.py"
+          pylint --rcfile .pylintrc src/main.py
 
 
       - name: Test with pytest
