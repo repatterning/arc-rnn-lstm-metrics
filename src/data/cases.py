@@ -1,4 +1,5 @@
 """Module cases.py"""
+
 import os
 
 import numpy as np
@@ -34,6 +35,8 @@ class Cases:
     @staticmethod
     def __get_elements(objects: list[str]) -> pd.DataFrame:
         """
+        logging.info('locators:\n%s', values)
+        logging.info('locators & splits:\n%s', values)
 
         :param objects:
         :return:
@@ -51,6 +54,8 @@ class Cases:
 
         # Collating
         values = values.copy().join(splittings, how='left')
+
+        # Drop 'endpoint'
         values.drop(columns='endpoint', inplace=True)
 
         return values
@@ -78,8 +83,11 @@ class Cases:
         """
 
         keys = self.__get_keys()
+
+        # ... ensure the core model directory is excluded
         if len(keys) > 0:
-            objects = [f's3://{self.__s3_parameters.internal}/{key}' for key in keys]
+            objects = [f's3://{self.__s3_parameters.internal}/{key}' for key in keys
+                       if os.path.basename(os.path.dirname(key)) != 'model']
         else:
             return pd.DataFrame()
 
