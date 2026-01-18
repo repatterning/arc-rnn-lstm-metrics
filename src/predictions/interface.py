@@ -45,10 +45,13 @@ class Interface:
             computations.append(statements)
 
         elements: list[list[dict]] = dask.compute(computations, scheduler='threads')[0]
-        __statements: list[dict] = sum(elements, [])
-        frame = pd.DataFrame.from_records(data=__statements)
+        __parts: list[dict] = sum(elements, [])
+        frame = pd.DataFrame.from_records(data=__parts)
+
+        # persist: statements
         message = self.__persist.statements(frame=frame)
         logging.info(message)
 
+        # persist: aggregates
         message = self.__persist.aggregates(frame=frame)
         logging.info(message)
