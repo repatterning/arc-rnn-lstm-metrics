@@ -1,3 +1,4 @@
+"""Module structure.py"""
 import json
 
 import dask
