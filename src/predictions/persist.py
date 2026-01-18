@@ -1,4 +1,5 @@
 """Module persist.py"""
+
 import json
 import os
 
@@ -10,6 +11,7 @@ import src.elements.structures as st
 import src.functions.objects
 import src.predictions.sections
 import src.predictions.stages
+import src.predictions.structure
 
 
 class Persist:
@@ -49,6 +51,22 @@ class Persist:
 
         return json.loads(string)
 
+    def statements(self, frame: pd.DataFrame) -> str:
+        """
+
+        :param frame:
+        :return:
+        """
+
+        nodes = {}
+        for stage in frame['stage'].unique():
+            instances: pd.DataFrame = frame.copy().loc[frame['stage'] == stage, :]
+            nodes[stage] = src.predictions.structure.Structure(instances=instances).exc()
+
+        path = os.path.join(self.__configurations.aggregates_, 'statements.json')
+
+        return self.__persist(nodes=nodes, path=path)
+
     def disaggregates(self, specification: sc.Specification, structures: st.Structures) -> str:
         """
 
@@ -67,22 +85,6 @@ class Persist:
         nodes.pop('uri', None)
 
         path = os.path.join(self.__configurations.points_, f'{str(specification.ts_id)}.json')
-
-        return self.__persist(nodes=nodes, path=path)
-
-    def statements(self, frame: pd.DataFrame) -> str:
-        """
-
-        :param frame:
-        :return:
-        """
-
-        nodes = {}
-        for stage in frame['stage'].unique():
-            blob = frame.copy().loc[frame['stage'] == stage, :]
-            node = self.__get_node(blob=blob)
-            nodes[stage] = node
-        path = os.path.join(self.__configurations.aggregates_, 'statements.json')
 
         return self.__persist(nodes=nodes, path=path)
 
