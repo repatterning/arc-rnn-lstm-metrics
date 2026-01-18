@@ -49,7 +49,6 @@ class Interface:
         frame = pd.DataFrame.from_records(data=__statements)
         message = self.__persist.statements(frame=frame)
         logging.info(message)
-        logging.info(frame)
 
         message = self.__persist.aggregates(frame=frame)
         logging.info(message)
