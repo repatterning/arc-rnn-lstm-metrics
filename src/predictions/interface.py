@@ -21,10 +21,11 @@ class Interface:
     """
 
     def __init__(self):
-        pass
 
-    @staticmethod
-    def exc(specifications: list[sc.Specification]):
+        self.__persist = src.predictions.persist.Persist()
+
+
+    def exc(self, specifications: list[sc.Specification]):
         """
 
         :param specifications: An inventory
@@ -45,8 +46,10 @@ class Interface:
 
         elements: list[list[dict]] = dask.compute(computations, scheduler='threads')[0]
         __statements: list[dict] = sum(elements, [])
-        aggregates = pd.DataFrame.from_records(data=__statements)
-        logging.info(aggregates)
+        frame = pd.DataFrame.from_records(data=__statements)
+        message = self.__persist.statements(frame=frame)
+        logging.info(message)
+        logging.info(frame)
 
-        message = src.predictions.persist.Persist().aggregates(frame=aggregates)
+        message = self.__persist.aggregates(frame=frame)
         logging.info(message)
