@@ -19,7 +19,8 @@ def main():
     logger.info('Starting: %s', datetime.datetime.now().isoformat(timespec='microseconds'))
 
     # Assets
-    specifications = src.data.interface.Interface(service=service, s3_parameters=s3_parameters, arguments=arguments).exc()
+    specifications = src.data.interface.Interface(
+        service=service, s3_parameters=s3_parameters, arguments=arguments).exc()
 
     # Evaluating
     src.predictions.interface.Interface().exc(specifications=specifications)
