@@ -35,8 +35,6 @@ class Cases:
     @staticmethod
     def __get_elements(objects: list[str]) -> pd.DataFrame:
         """
-        logging.info('locators:\n%s', values)
-        logging.info('locators & splits:\n%s', values)
 
         :param objects:
         :return:
@@ -60,10 +58,35 @@ class Cases:
 
         return values
 
+    def __get_cases(self, keys: list[str]) -> pd.DataFrame:
+        """
+
+        :param keys:
+        :return:
+        """
+
+        # ... ensure the core model directory is excluded
+        if len(keys) > 0:
+            objects = [f's3://{self.__s3_parameters.internal}/{key}' for key in keys
+                       if os.path.basename(os.path.dirname(key)) != 'model']
+        else:
+            return pd.DataFrame()
+
+        # The variable objects is a list of uniform resource locators.  Each locator includes a 'ts_id',
+        # 'catchment_id', 'datestr' substring; the function __get_elements extracts these items.
+        values = self.__get_elements(objects=objects)
+
+        # Types
+        values['catchment_id'] = values['catchment_id'].astype(dtype=np.int64)
+        values['ts_id'] = values['ts_id'].astype(dtype=np.int64)
+
+        return values
+
     @dask.delayed
     def __get_listings(self, path: str) -> list[str]:
         """
 
+        :param path:
         :return:
         """
 
@@ -86,19 +109,4 @@ class Cases:
         elements = dask.compute(computations, scheduler='threads')[0]
         keys: list[str] = sum(elements, [])
 
-        # ... ensure the core model directory is excluded
-        if len(keys) > 0:
-            objects = [f's3://{self.__s3_parameters.internal}/{key}' for key in keys
-                       if os.path.basename(os.path.dirname(key)) != 'model']
-        else:
-            return pd.DataFrame()
-
-        # The variable objects is a list of uniform resource locators.  Each locator includes a 'ts_id',
-        # 'catchment_id', 'datestr' substring; the function __get_elements extracts these items.
-        values = self.__get_elements(objects=objects)
-
-        # Types
-        values['catchment_id'] = values['catchment_id'].astype(dtype=np.int64)
-        values['ts_id'] = values['ts_id'].astype(dtype=np.int64)
-
-        return values
+        return self.__get_cases(keys=keys)
