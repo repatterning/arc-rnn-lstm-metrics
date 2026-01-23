@@ -22,7 +22,8 @@ class Errors:
         """
 
         # Quantile points
-        self.__q_points = {0.10: 'l_whisker', 0.25: 'l_quartile', 0.50: 'median', 0.75: 'u_quartile', 0.90: 'u_whisker'}
+        self.__q_points = {0.05: 'l_whisker_e', 0.10: 'l_whisker', 0.25: 'l_quartile', 0.50: 'median',
+                           0.75: 'u_quartile', 0.90: 'u_whisker', 0.95: 'u_whisker_e'}
 
         # Instances
         self.__persist = src.predictions.persist.Persist()
