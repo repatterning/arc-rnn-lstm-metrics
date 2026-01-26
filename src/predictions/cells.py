@@ -1,11 +1,11 @@
-"""Module structure.py"""
+"""Module cells.py"""
 import json
 
 import dask
 import pandas as pd
 
 
-class Structure:
+class Cells:
     """
     This class structures the metrics data.
     """
