@@ -42,7 +42,7 @@ class Config:
         self.data_ = os.path.join(os.getcwd(), 'data')
         self.warehouse = os.path.join(os.getcwd(), 'warehouse')
 
-        self.pathway_ = os.path.join(self.warehouse, 'arc-rnn-lstm-metrics')
+        self.pathway_ = self.warehouse
         self.points_ = os.path.join(self.pathway_, 'disaggregates', 'points')
         self.menu_ = os.path.join(self.pathway_, 'disaggregates', 'menu')
         self.aggregates_ = os.path.join(self.pathway_, 'aggregates')
