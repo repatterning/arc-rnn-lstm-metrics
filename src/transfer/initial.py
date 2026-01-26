@@ -44,7 +44,7 @@ class Initial:
         instance = src.s3.prefix.Prefix(service=self.__service, bucket_name=self.__bucket_name)
 
         # Get the keys therein
-        keys: list[str] = instance.objects(prefix=self.__arguments.get('prefix').get('destination'))
+        keys: list[str] = instance.objects(prefix=self.__arguments.get('metrics').get('path').get('initial'))
 
         if len(keys) > 0:
             objects = [{'Key' : key} for key in keys]
