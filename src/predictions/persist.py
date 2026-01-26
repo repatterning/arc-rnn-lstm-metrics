@@ -11,7 +11,7 @@ import src.elements.structures as st
 import src.functions.objects
 import src.predictions.sections
 import src.predictions.stages
-import src.predictions.structure
+import src.predictions.cells
 
 
 class Persist:
@@ -61,7 +61,7 @@ class Persist:
         nodes = {}
         for stage in frame['stage'].unique():
             instances: pd.DataFrame = frame.copy().loc[frame['stage'] == stage, :]
-            nodes[stage] = src.predictions.structure.Structure(instances=instances).exc()
+            nodes[stage] = src.predictions.cells.Cells(instances=instances).exc()
 
         path = os.path.join(self.__configurations.aggregates_, 'statements.json')
 
