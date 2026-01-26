@@ -100,7 +100,7 @@ class Cases:
         :return:
         """
 
-        paths = self.__pre.objects(prefix=self.__arguments.get('prefix').get('source'), delimiter='/')
+        paths = self.__pre.objects(prefix=self.__arguments.get('modelling').get('path').get('initial'), delimiter='/')
         paths = self.__pre.objects(paths[0], delimiter='/')
 
         computations = []
